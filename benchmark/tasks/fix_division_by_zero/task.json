@@ -1,0 +1,5 @@
+{
+  "task_id": "fix_division_by_zero",
+  "difficulty": "easy",
+  "prompt": "Fix the bug: dividing by zero should return an error message, not crash the program with a traceback."
+}

@@ -1,0 +1,5 @@
+{
+  "task_id": "fix_operator_precedence",
+  "difficulty": "easy",
+  "prompt": "Fix the bug: 3 + 7 * 2 shouldn't be 20."
+}

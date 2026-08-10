@@ -1,0 +1,437 @@
+[
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 0,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 12.45,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304550.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 1,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 10.85,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304561.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 2,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 8.42,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304570.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 3,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 10.18,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304580.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 4,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 28.58,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304609.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 5,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info"
+    ],
+    "duration_seconds": 14.12,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304623.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 6,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 27.78,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304651.json]\n"
+  },
+  {
+    "task_id": "add_modulo_operator",
+    "difficulty": "medium",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 7,
+    "passed": false,
+    "outcome": "diagnosed_but_not_executed",
+    "timed_out": false,
+    "num_tool_calls": 2,
+    "num_iterations": 3,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content"
+    ],
+    "duration_seconds": 12.21,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Add_support_for_the_modulo_operator_(%)__1786304663.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 0,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 26.15,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304689.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 1,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 26.83,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304716.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 2,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 27.27,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304743.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 3,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 11.73,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304755.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 4,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 21.34,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304776.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 5,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 30.05,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304807.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 6,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 12.23,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304819.json]\n"
+  },
+  {
+    "task_id": "fix_division_by_zero",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 7,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 3,
+    "num_iterations": 4,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_file_content"
+    ],
+    "duration_seconds": 33.3,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_file_content\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_dividing_by_zero_should_ret_1786304852.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 0,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 78.4,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786304931.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 1,
+    "passed": false,
+    "outcome": "no_attempt",
+    "timed_out": true,
+    "num_tool_calls": 0,
+    "num_iterations": 0,
+    "tool_calls": [],
+    "duration_seconds": 138.96,
+    "agent_stdout_tail": "\n[TIMED OUT]"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 2,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 46.12,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305116.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 3,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 45.11,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305161.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 4,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 57.46,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305219.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 5,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 54.95,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305274.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 6,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 40.47,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305314.json]\n"
+  },
+  {
+    "task_id": "fix_operator_precedence",
+    "difficulty": "easy",
+    "model": "openai/gpt-oss-20b:free",
+    "run_index": 7,
+    "passed": true,
+    "outcome": "passed",
+    "timed_out": false,
+    "num_tool_calls": 5,
+    "num_iterations": 6,
+    "tool_calls": [
+      "get_files_info",
+      "get_file_content",
+      "get_files_info",
+      "get_file_content",
+      "write_file"
+    ],
+    "duration_seconds": 68.67,
+    "agent_stdout_tail": " - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: get_files_info\n - Calling function: get_file_content\n - Calling function: write_file\nFinal response:\nNone\n[logged run to logs/Fix_the_bug:_3_+_7_*_2_shouldn't_be_20._1786305383.json]\n"
+  }
+]

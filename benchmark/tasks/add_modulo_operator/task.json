@@ -1,0 +1,5 @@
+{
+  "task_id": "add_modulo_operator",
+  "difficulty": "medium",
+  "prompt": "Add support for the modulo operator (%) to the calculator, with the same precedence as multiplication and division."
+}
