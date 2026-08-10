@@ -72,3 +72,11 @@ several test expressions — 3 + 7 * 2 now correctly returns 17.
 ## 🔒 Safety
 
 Every tool call is validated against the working directory before it runs — Scout can't read, write, or execute anything outside the sandbox, no matter how it's asked. It's still an agent that can execute arbitrary Python within that sandbox, so treat the working directory the same way you'd treat any other code you let an unattended script run against.
+
+## 📊 Benchmark: does prompt engineering actually help?
+
+I built a small evaluation harness to test Scout against a suite of coding tasks, across multiple runs, and measured whether a stricter system prompt actually improved task completion — rather than assuming it did.
+
+**Result**: the effect depended entirely on task difficulty. No change on tasks the model already solved reliably, no change on a task it consistently couldn't solve, and a modest reliability gain (88% → 100%) at the cost of ~30% more time on the one task in between.
+
+Full write-up, methodology, and raw results: [`benchmark/README.md`](./benchmark/README.md)
