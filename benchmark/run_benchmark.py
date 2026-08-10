@@ -14,11 +14,12 @@ RESULTS_DIR = SCRIPT_DIR / "results"
 
 MODELS = [
     "openai/gpt-oss-20b:free",
+    "nvidia/nemotron-3-nano-30b-a3b:free",
     # add more specific ":free" model IDs here once you find ones that
     # reliably support tool calling on OpenRouter, e.g.:
     # "openai/gpt-oss-20b:free",
 ]
-RUNS_PER_TASK = 8
+RUNS_PER_TASK = 3
 
 
 def load_tasks() -> list[dict]:

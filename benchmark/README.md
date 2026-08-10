@@ -91,6 +91,44 @@ provisional until they replicate — a stark reminder that n=8 on one task
 isn't enough to trust a single measurement, especially with free-tier model
 inference that has its own variance independent of anything being tested.
 
+## Multi-model comparison
+
+Ran the same three-task suite through two pinned models to see whether the
+task-difficulty pattern found above (easy fixes: reliable, feature additions:
+unreliable) holds across models, or is specific to `openai/gpt-oss-20b:free`.
+
+A third model, `google/gemma-4-31b-it:free`, was excluded entirely — every
+single request to it returned a 429 from Google AI Studio's shared free pool
+(`upstream_provider_shared_pool`), unrelated to anything in this benchmark.
+This is itself worth noting: different free models on OpenRouter draw from
+different upstream providers with independently varying availability, and a
+fair comparison has to detect and exclude this noise rather than let it
+silently distort pass rates.
+
+| Model | Task | Pass Rate | Mean Duration |
+|---|---|---|---|
+| `openai/gpt-oss-20b:free` | add_modulo_operator | 1/8 (12%) | 44.1s |
+| `openai/gpt-oss-20b:free` | fix_division_by_zero | 6/7 (86%) | 35.3s |
+| `openai/gpt-oss-20b:free` | fix_operator_precedence | n=1 — insufficient data (7/8 attempts hit provider rate limits) | — |
+| `nvidia/nemotron-3-nano-30b-a3b:free` | add_modulo_operator | 2/8 (25%) | 19.3s |
+| `nvidia/nemotron-3-nano-30b-a3b:free` | fix_division_by_zero | 8/8 (100%) | 52.0s |
+| `nvidia/nemotron-3-nano-30b-a3b:free` | fix_operator_precedence | 6/8 (75%) | 37.7s |
+
+**Findings:**
+
+- `nemotron-3-nano` outperformed `gpt-oss-20b` on every task with usable
+  data, most clearly on the easy task (100% vs 86%).
+- The task-difficulty pattern replicated across both models: neither
+  reliably solved the feature-addition task (`add_modulo_operator`, 12% and
+  25%), while both handled at least one bug-fix task well. This suggests the
+  bug-fix vs. feature-addition distinction found earlier is a property of
+  small free-tier models generally, not an artifact of one specific model.
+- Free-tier model comparisons need to account for provider-level rate
+  limiting as a real confound, separate from task difficulty or prompt
+  design — `api_error` outcomes were explicitly filtered out of pass-rate
+  calculations above rather than counted as failures, and cells with too few
+  clean samples (n=1) are reported as insufficient rather than as a rate.
+
 ## Limitations
 
 - Small `n` per cell (8) — sufficient to see large effects, not tight enough
