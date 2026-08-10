@@ -93,41 +93,50 @@ inference that has its own variance independent of anything being tested.
 
 ## Multi-model comparison
 
-Ran the same three-task suite through two pinned models to see whether the
-task-difficulty pattern found above (easy fixes: reliable, feature additions:
-unreliable) holds across models, or is specific to `openai/gpt-oss-20b:free`.
+Expanded the task suite to 5 tasks (3 bug-fixes, 2 feature-additions) and ran
+both through 2 models with clean, usable data (`google/gemma-4-31b-it:free`
+was dropped entirely in an earlier round — every request to it failed with a
+429 from Google AI Studio's shared free pool, unrelated to this benchmark).
 
-A third model, `google/gemma-4-31b-it:free`, was excluded entirely — every
-single request to it returned a 429 from Google AI Studio's shared free pool
-(`upstream_provider_shared_pool`), unrelated to anything in this benchmark.
-This is itself worth noting: different free models on OpenRouter draw from
-different upstream providers with independently varying availability, and a
-fair comparison has to detect and exclude this noise rather than let it
-silently distort pass rates.
-
-| Model | Task | Pass Rate | Mean Duration |
+| Model | Task | Type | Pass Rate |
 |---|---|---|---|
-| `openai/gpt-oss-20b:free` | add_modulo_operator | 1/8 (12%) | 44.1s |
-| `openai/gpt-oss-20b:free` | fix_division_by_zero | 6/7 (86%) | 35.3s |
-| `openai/gpt-oss-20b:free` | fix_operator_precedence | n=1 — insufficient data (7/8 attempts hit provider rate limits) | — |
-| `nvidia/nemotron-3-nano-30b-a3b:free` | add_modulo_operator | 2/8 (25%) | 19.3s |
-| `nvidia/nemotron-3-nano-30b-a3b:free` | fix_division_by_zero | 8/8 (100%) | 52.0s |
-| `nvidia/nemotron-3-nano-30b-a3b:free` | fix_operator_precedence | 6/8 (75%) | 37.7s |
+| `gpt-oss-20b` | fix_division_by_zero | bugfix | 5/5 (100%) |
+| `gpt-oss-20b` | fix_operator_precedence | bugfix | 4/5 (80%) |
+| `gpt-oss-20b` | fix_float_precision_display | bugfix | 0/5 (0%) |
+| `gpt-oss-20b` | add_modulo_operator | feature | 0/5 (0%) |
+| `gpt-oss-20b` | add_power_operator | feature | 0/5 (0%) |
+| `nemotron-3-nano` | fix_division_by_zero | bugfix | 5/5 (100%) |
+| `nemotron-3-nano` | fix_operator_precedence | bugfix | 4/5 (80%) |
+| `nemotron-3-nano` | fix_float_precision_display | bugfix | 2/5 (40%) |
+| `nemotron-3-nano` | add_modulo_operator | feature | 2/5 (40%) |
+| `nemotron-3-nano` | add_power_operator | feature | 3/5 (60%) |
+
+**Aggregate, both models combined, n=50:**
+
+| Task type | Pass rate |
+|---|---|
+| Bug-fix | 67% (20/30) |
+| Feature-addition | 25% (5/20) |
 
 **Findings:**
 
-- `nemotron-3-nano` outperformed `gpt-oss-20b` on every task with usable
-  data, most clearly on the easy task (100% vs 86%).
-- The task-difficulty pattern replicated across both models: neither
-  reliably solved the feature-addition task (`add_modulo_operator`, 12% and
-  25%), while both handled at least one bug-fix task well. This suggests the
-  bug-fix vs. feature-addition distinction found earlier is a property of
-  small free-tier models generally, not an artifact of one specific model.
-- Free-tier model comparisons need to account for provider-level rate
-  limiting as a real confound, separate from task difficulty or prompt
-  design — `api_error` outcomes were explicitly filtered out of pass-rate
-  calculations above rather than counted as failures, and cells with too few
-  clean samples (n=1) are reported as insufficient rather than as a rate.
+- The bug-fix vs. feature-addition gap held up and strengthened with more
+  data: 67% vs 25% pooled across both models and all 5 tasks, up from the
+  earlier 3-task, single-model observation. This is now the most robust
+  finding in this benchmark.
+- The size of the gap between the two models varies by task rather than
+  being uniform — `nemotron-3-nano` clearly outperformed `gpt-oss-20b` on
+  `fix_float_precision_display` (40% vs 0%) and both feature tasks, while
+  the two were roughly tied or `gpt-oss-20b` slightly ahead on the other two
+  bug-fix tasks. Neither model is straightforwardly "better" across the
+  board — the honest summary is that `nemotron-3-nano` has a wider range of
+  tasks it can handle at all, not that it's more accurate on tasks both
+  models attempt.
+- `fix_float_precision_display` (0% for `gpt-oss-20b`, 40% for
+  `nemotron-3-nano`) turned out to be harder than expected for a task
+  classified "easy" — floating-point display formatting appears to be a
+  genuine blind spot for both models, worth investigating further as its own
+  category rather than assuming difficulty labels transfer cleanly.
 
 ## Limitations
 

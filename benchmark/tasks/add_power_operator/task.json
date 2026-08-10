@@ -1,0 +1,5 @@
+{
+  "task_id": "add_power_operator",
+  "difficulty": "medium",
+  "prompt": "Add support for the power/exponent operator (^) to the calculator, with higher precedence than multiplication and division."
+}
