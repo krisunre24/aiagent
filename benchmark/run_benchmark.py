@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import signal
 import subprocess
 import tempfile
 import time
@@ -19,7 +20,7 @@ MODELS = [
     # reliably support tool calling on OpenRouter, e.g.:
     # "openai/gpt-oss-20b:free",
 ]
-RUNS_PER_TASK = 3
+RUNS_PER_TASK = 5
 
 
 def load_tasks() -> list[dict]:
@@ -42,6 +43,12 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
         setup_src = Path(task["task_dir"]) / "setup"
         work_dir = Path(tmp) / "calculator"
         shutil.copytree(setup_src, work_dir)
+        
+        subprocess.run(["git", "init"], cwd=str(work_dir), capture_output=True)
+        subprocess.run(["git", "config", "user.email", "benchmark@local"], cwd=str(work_dir), capture_output=True)
+        subprocess.run(["git", "config", "user.name", "Benchmark"], cwd=str(work_dir), capture_output=True)
+        subprocess.run(["git", "add", "."], cwd=str(work_dir), capture_output=True)
+        subprocess.run(["git", "commit", "-m", "baseline"], cwd=str(work_dir), capture_output=True)
 
         env = os.environ.copy()
         env["AGENT_WORKING_DIR"] = str(work_dir)
@@ -49,22 +56,34 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
         logs_before = set((PROJECT_ROOT / "logs").glob("*.json")) if (PROJECT_ROOT / "logs").exists() else set()
 
         start = time.time()
+        agent_timed_out = False
         try:
-            agent_result = subprocess.run(
+            proc = subprocess.Popen(
                 ["uv", "run", "main.py", task["prompt"], "--model", model],
                 cwd=str(PROJECT_ROOT),
                 env=env,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                timeout=120,
+                start_new_session=True,
             )
-            agent_stdout = agent_result.stdout
-            agent_timed_out = False
-        except subprocess.TimeoutExpired as e:
-            agent_stdout = (e.stdout or "") + "\n[TIMED OUT]"
-            agent_timed_out = True
+            try:
+                stdout, stderr = proc.communicate(timeout=120)
+                agent_stdout = stdout
+                agent_returncode = proc.returncode
+            except subprocess.TimeoutExpired:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+                try:
+                    stdout, stderr = proc.communicate(timeout=10)
+                except subprocess.TimeoutExpired:
+                    stdout = "[COULD NOT CAPTURE OUTPUT AFTER KILL]"
+                agent_stdout = (stdout or "") + "\n[TIMED OUT AND KILLED]"
+                agent_timed_out = True
+                agent_returncode = None
+        except Exception as e:
+            agent_stdout = f"[SUBPROCESS ERROR: {e}]"
+            agent_returncode = None
 
-        agent_result_returncode = agent_result.returncode if not agent_timed_out else None
         duration = time.time() - start
 
         # Find the log file this run just wrote, to pull tool_calls/iterations
@@ -88,8 +107,16 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
             text=True,
         )
         passed = (not agent_timed_out) and verify_result.returncode == 0
+        
+        diff_result = subprocess.run(
+            ["git", "diff", "--stat", "HEAD"],
+            cwd=str(work_dir),
+            capture_output=True,
+            text=True,
+        )
+        diff_stat = diff_result.stdout.strip()
 
-        if agent_result_returncode == 2:
+        if agent_returncode == 2:
             outcome = "api_error"
         elif passed:
             outcome = "passed"
@@ -111,6 +138,7 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
             "num_tool_calls": num_tool_calls,
             "num_iterations": num_iterations,
             "tool_calls": tool_call_names,
+            "diff_stat": diff_stat,
             "duration_seconds": round(duration, 2),
             "agent_stdout_tail": agent_stdout[-2000:],
         }

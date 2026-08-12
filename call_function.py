@@ -1,5 +1,7 @@
 import json
 from collections.abc import Callable
+from functions.run_linter import run_linter, schema_run_linter
+from functions.git_diff import git_diff, schema_git_diff
 
 from functions.get_files_info import get_files_info, schema_get_files_info
 from functions.get_file_content import get_file_content, schema_get_file_content
@@ -11,6 +13,8 @@ available_functions = [
     schema_get_file_content,
     schema_write_file,
     schema_run_python_file,
+    schema_run_linter,
+    schema_git_diff,
 ]
 
 function_map: dict[str, Callable[..., str]] = {
@@ -18,6 +22,8 @@ function_map: dict[str, Callable[..., str]] = {
     "get_file_content": get_file_content,
     "write_file": write_file,
     "run_python_file": run_python_file,
+    "run_linter": run_linter,
+    "git_diff": git_diff,
 }
 
 

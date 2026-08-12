@@ -138,6 +138,51 @@ was dropped entirely in an earlier round — every request to it failed with a
   genuine blind spot for both models, worth investigating further as its own
   category rather than assuming difficulty labels transfer cleanly.
 
+## Measuring code quality
+
+Added two tools beyond the original four: `run_linter` (runs `ruff` against
+the working directory) and `git_diff` (shows the size/scope of the agent's
+own changes so far). Each benchmark trial's working directory is now
+initialized as its own isolated git repo with a committed baseline before
+the agent runs, so `git diff --stat` always reflects only the agent's
+changes for that trial.
+
+**Finding: when this agent writes code, it writes small, focused changes.**
+Across 12 runs where the agent actually called `write_file` (excluding the
+much larger number of runs where it gave up or only described a fix without
+executing it), diffs ranged from 2 to 9 lines, and 11 of 12 (92%) passed
+verification. The one failure was not a bloated or careless edit — it was a
+normally-sized 5-line change that simply didn't produce a correct fix.
+
+This reframes where the agent's real bottleneck is. It isn't "the agent
+makes messy, over-broad changes that break things" — the changes it commits
+to are almost always small and appropriately scoped. The bottleneck is
+upstream: whether the agent decides to act at all. This is consistent with,
+and cross-validates, the `diagnosed_but_not_executed` finding from the
+prompt experiment above — of the 44 clean runs analyzed here, 32 made no
+file change whatsoever (correctly reflected as an empty `git diff`), most of
+them cases where the agent investigated the code but stopped short of
+writing the fix.
+
+**A known limitation surfaced during this work**: compiled `.pyc` files in
+`pkg/__pycache__/` were committed as part of each task's baseline and show
+up as noise in every diff (e.g. `calculator.cpython-313.pyc | Bin 3412 ->
+3479 bytes`). This doesn't affect the line-count analysis above, but a
+cleaner setup would `.gitignore` `__pycache__/` inside each task's baseline
+commit.
+
+**Infrastructure note**: getting reliable process-group timeouts for a
+`uv run` subprocess (which spawns its own child processes) took several
+iterations — a naive `subprocess.run(timeout=...)` did not reliably kill the
+full process tree, occasionally allowing a run to hang for hours instead of
+the intended 120-second cap. The fix was switching to `Popen` with
+`start_new_session=True` and explicitly `SIGKILL`-ing the process group on
+timeout, with a secondary bounded wait on output capture in case pipes stay
+open after the kill. One outlier (666s) still occurred in the final run
+and was excluded from analysis rather than silently kept — a reminder that
+subprocess timeout handling on systems with nested process trees is harder
+to get fully right than it looks, even after fixing it once.
+
 ## Limitations
 
 - Small `n` per cell (8) — sufficient to see large effects, not tight enough
