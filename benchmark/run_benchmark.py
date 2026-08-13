@@ -20,13 +20,15 @@ MODELS = [
     # reliably support tool calling on OpenRouter, e.g.:
     # "openai/gpt-oss-20b:free",
 ]
-RUNS_PER_TASK = 5
+RUNS_PER_TASK = 3
+USE_SPECIFIC_PROMPT = True
 
-
-def load_tasks() -> list[dict]:
+def load_tasks(only_prefix: str | None = None) -> list[dict]:
     tasks = []
     for task_dir in sorted(TASKS_DIR.iterdir()):
         if not task_dir.is_dir():
+            continue
+        if only_prefix and not task_dir.name.startswith(only_prefix):
             continue
         task_json = task_dir / "task.json"
         if not task_json.exists():
@@ -38,7 +40,7 @@ def load_tasks() -> list[dict]:
     return tasks
 
 
-def run_single(task: dict, model: str, run_index: int) -> dict:
+def run_single(task: dict, model: str, run_index: int, use_specific_prompt: bool = False) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         setup_src = Path(task["task_dir"]) / "setup"
         work_dir = Path(tmp) / "calculator"
@@ -58,8 +60,9 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
         start = time.time()
         agent_timed_out = False
         try:
+            prompt_to_use = task.get("specific_prompt") if use_specific_prompt and task.get("specific_prompt") else task["prompt"]
             proc = subprocess.Popen(
-                ["uv", "run", "main.py", task["prompt"], "--model", model],
+                ["uv", "run", "main.py", prompt_to_use, "--model", model],
                 cwd=str(PROJECT_ROOT),
                 env=env,
                 stdout=subprocess.PIPE,
@@ -129,6 +132,7 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
 
         return {
             "task_id": task["task_id"],
+            "prompt_variant": "specific" if use_specific_prompt and task.get("specific_prompt") else "generic",
             "difficulty": task.get("difficulty", "unknown"),
             "model": model,
             "run_index": run_index,
@@ -146,7 +150,7 @@ def run_single(task: dict, model: str, run_index: int) -> dict:
 
 def main():
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    tasks = load_tasks()
+    tasks = load_tasks(only_prefix="mutant_")
 
     if not tasks:
         print(f"No tasks found in {TASKS_DIR}")
@@ -158,7 +162,7 @@ def main():
         for model in MODELS:
             for run_index in range(RUNS_PER_TASK):
                 print(f"Running {task['task_id']} | {model} | run {run_index + 1}/{RUNS_PER_TASK}")
-                result = run_single(task, model, run_index)
+                result = run_single(task, model, run_index, use_specific_prompt=USE_SPECIFIC_PROMPT)
                 all_results.append(result)
                 status = "PASS" if result["passed"] else "FAIL"
                 print(f"  -> {status} ({result['duration_seconds']}s)")

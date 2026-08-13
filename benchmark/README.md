@@ -183,6 +183,60 @@ and was excluded from analysis rather than silently kept — a reminder that
 subprocess timeout handling on systems with nested process trees is harder
 to get fully right than it looks, even after fixing it once.
 
+## Does the agent generalize beyond hand-picked tasks?
+
+All tasks so far were hand-written by me. That raises an obvious question:
+was the agent actually good at "bug-fixing" as a general capability, or just
+good at the specific five bugs I happened to write tasks for?
+
+To test this, I wrote a small mutation engine (`benchmark/mutate.py`) that
+takes the known-correct calculator and applies small, targeted mutations to
+`pkg/calculator.py` — swapping an operator, flipping a comparison — and
+automatically discards any mutation that doesn't actually break the existing
+test suite. This produces genuinely novel bugs with zero hand-authored task
+logic, verified the same way as every other task: does the original test
+suite pass again after the agent's fix.
+
+Five mutations survived verification (one was discarded — a mutation that
+only broke indentation, producing a `SyntaxError` rather than a logic bug,
+which tests something fundamentally different and was excluded).
+
+**First pass, using a generic prompt** ("the test suite is failing,
+investigate and fix it"), n=25 clean runs across both models:
+
+| Prompt type | Pass rate |
+|---|---|
+| Generic ("tests are failing, fix it") | 28% (7/25) |
+
+This was a large, concerning drop from the 67% pooled pass rate on the
+hand-written bug-fix tasks. Before concluding the agent simply can't handle
+novel bugs, I checked for a confound: my hand-written tasks all gave a
+concrete failing example in the prompt (e.g. "3 + 7 * 2 shouldn't be 20"),
+while the auto-generated mutant tasks used a generic, example-free prompt.
+That's a real, uncontrolled difference between the two task sets.
+
+**Second pass**: extended the mutator to auto-derive a concrete example for
+each mutation (by probing the mutated code against a handful of test
+expressions until one produced a wrong, non-crashing result), then re-ran
+the same five mutant bugs with that specific prompt instead:
+
+| Prompt type | Pass rate |
+|---|---|
+| Generic ("tests are failing, fix it") | 28% (7/25) |
+| Specific (concrete failing example given) | 39% (11/28) |
+
+**Conclusion**: prompt specificity is a real, measurable factor — an
+11-point improvement from giving a concrete example instead of a vague
+description — but it does not close the gap to the hand-written tasks'
+67%. Even with a comparably concrete prompt, genuinely novel bugs (bugs the
+task set wasn't specifically built and tuned around) are meaningfully
+harder for this agent than the hand-picked set suggested. The honest
+takeaway: the earlier 67% figure likely overstates general bug-fixing
+capability, and a fair benchmark of an agent should include
+mutation-generated or otherwise unseen tasks, not just hand-curated ones —
+hand-curated tasks alone can look reassuringly high without actually
+measuring generalization.
+
 ## Limitations
 
 - Small `n` per cell (8) — sufficient to see large effects, not tight enough
@@ -197,14 +251,12 @@ to get fully right than it looks, even after fixing it once.
   bug-fix tasks which name a broken expression) rather than a pure capability
   gap — worth testing with a more specific prompt in a follow-up.
 
-## Reproducing this
-
+**Reproducing this:**
 ```bash
-# Before condition: use the minimal prompt in prompts.py, then:
+uv run python benchmark/mutate.py   # regenerates mutant tasks in benchmark/tasks/
+# set USE_SPECIFIC_PROMPT = True/False in run_benchmark.py to pick the variant, then:
 uv run python benchmark/run_benchmark.py
-
-# After condition: swap in the stricter prompt (see prompts.py comments), then run again
 ```
 
-Raw results: `benchmark/results/three_tasks_before_prompt_fix.json`,
-`benchmark/results/three_tasks_after_prompt_fix.json`
+Raw results: `benchmark/results/mutant_tasks.json` (generic prompt),
+`benchmark/results/mutant_tasks_specific_prompt.json` (specific prompt).

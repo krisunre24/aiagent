@@ -1,0 +1,6 @@
+{
+  "task_id": "mutant_swap_plus_precedence",
+  "difficulty": "mutant",
+  "prompt": "The test suite is failing. Investigate and fix the bug in the calculator so all tests pass again.",
+  "specific_prompt": "Fix the bug: 3 + 7 * 2 shouldn't be 20."
+}
