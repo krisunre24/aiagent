@@ -237,6 +237,17 @@ mutation-generated or otherwise unseen tasks, not just hand-curated ones —
 hand-curated tasks alone can look reassuringly high without actually
 measuring generalization.
 
+**Statistical note (added after re-analysis with `benchmark/analyze.py`):**
+Fisher's exact test on the generic-vs-specific prompt comparison
+(7/25 vs 11/28) gives p=0.56 — this difference is **not statistically
+significant** at this sample size. The apparent 11-point improvement from
+prompt specificity should be read as suggestive, not confirmed; a larger
+sample would be needed to say with confidence whether concrete examples
+actually help. In contrast, the bug-fix vs. feature-addition gap, tested
+across the full pooled dataset (96/126 vs 13/71), gives p<0.0001 and is
+strongly significant — this is the one finding in this benchmark that
+clears a real statistical bar, not just an eyeballed difference.
+
 ## Limitations
 
 - Small `n` per cell (8) — sufficient to see large effects, not tight enough
