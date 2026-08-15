@@ -1,3 +1,8 @@
+import matplotlib
+matplotlib.use("Agg")  # no display needed, just save files
+import matplotlib.pyplot as plt
+import re
+
 import json
 from pathlib import Path
 
@@ -48,6 +53,60 @@ def two_proportion_test(passed_a: int, total_a: int, passed_b: int, total_b: int
     else:
         print("-> NOT statistically significant at alpha=0.05 -- could plausibly be noise at this sample size")
 
+def plot_pass_rate_by_model_task(df: pd.DataFrame, out_path: Path) -> None:
+    """Grouped bar chart: pass rate per model, per task, for the 5-task hand-written suite."""
+    TASK_TYPE = {
+        "fix_division_by_zero": "bugfix",
+        "fix_operator_precedence": "bugfix",
+        "fix_float_precision_display": "bugfix",
+        "add_modulo_operator": "feature",
+        "add_power_operator": "feature",
+    }
+    subset = df[df["task_id"].isin(TASK_TYPE.keys())].copy()
+    grouped = subset.groupby(["model", "task_id"])["passed"].mean().unstack() * 100
+
+    ax = grouped.T.plot(kind="bar", figsize=(10, 5))
+    ax.set_ylabel("Pass rate (%)")
+    ax.set_xlabel("Task")
+    ax.set_title("Pass rate by model and task")
+    ax.legend(title="Model", bbox_to_anchor=(1.02, 1), loc="upper left")
+    ax.set_ylim(0, 105)
+    plt.xticks(rotation=30, ha="right")
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150)
+    plt.close()
+    print(f"Saved {out_path}")
+
+
+def extract_diff_lines(diff_stat) -> int:
+    """Pull total changed lines (insertions + deletions) out of a git diff --stat string.
+    Older result files predate the git_diff tool and have no diff_stat at all,
+    which pandas loads as NaN (a float) rather than an empty string -- handle both."""
+    if not isinstance(diff_stat, str) or not diff_stat:
+        return 0
+    match = re.search(r"(\d+) insertion", diff_stat)
+    insertions = int(match.group(1)) if match else 0
+    match = re.search(r"(\d+) deletion", diff_stat)
+    deletions = int(match.group(1)) if match else 0
+    return insertions + deletions
+
+def plot_diff_size_vs_outcome(df: pd.DataFrame, out_path: Path) -> None:
+    """Box plot: does the size of the agent's code change differ between passed and failed runs?"""
+    subset = df[df["diff_stat"].apply(lambda x: isinstance(x, str) and len(x) > 0)].copy()
+    subset["diff_lines"] = subset["diff_stat"].apply(extract_diff_lines)
+    subset["outcome_label"] = subset["passed"].map({True: "Passed", False: "Failed"})
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    subset.boxplot(column="diff_lines", by="outcome_label", ax=ax)
+    ax.set_ylabel("Lines changed (insertions + deletions)")
+    ax.set_xlabel("")
+    ax.set_title("Change size vs. outcome (runs with a real code change only)")
+    plt.suptitle("")
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150)
+    plt.close()
+    print(f"Saved {out_path}")
+
 
 if __name__ == "__main__":
     df = load_all_results()
@@ -96,3 +155,8 @@ if __name__ == "__main__":
         label_a="Bug-fix tasks",
         label_b="Feature-addition tasks",
     )
+
+    charts_dir = Path(__file__).parent / "charts"
+    charts_dir.mkdir(exist_ok=True)
+    plot_pass_rate_by_model_task(df_clean, charts_dir / "pass_rate_by_model_task.png")
+    plot_diff_size_vs_outcome(df_clean, charts_dir / "diff_size_vs_outcome.png")

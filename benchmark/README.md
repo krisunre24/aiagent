@@ -138,6 +138,9 @@ was dropped entirely in an earlier round — every request to it failed with a
   genuine blind spot for both models, worth investigating further as its own
   category rather than assuming difficulty labels transfer cleanly.
 
+![Pass rate by model and task](charts/pass_rate_by_model_task.png)
+![Diff size vs outcome](charts/diff_size_vs_outcome.png)
+
 ## Measuring code quality
 
 Added two tools beyond the original four: `run_linter` (runs `ruff` against
@@ -247,6 +250,47 @@ actually help. In contrast, the bug-fix vs. feature-addition gap, tested
 across the full pooled dataset (96/126 vs 13/71), gives p<0.0001 and is
 strongly significant — this is the one finding in this benchmark that
 clears a real statistical bar, not just an eyeballed difference.
+
+## Quantitative analysis: pandas, visualization, and a small classifier
+
+Re-ran all prior findings through `benchmark/analyze.py`, which loads every
+`benchmark/results/*.json` file into a single pandas DataFrame instead of
+computing counts by hand per-file.
+
+**Confirmed with statistical testing** (Fisher's exact test, since sample
+sizes are small):
+- Bug-fix vs. feature-addition, pooled across the full dataset: 76.2%
+  (96/126) vs. 18.3% (13/71), **p < 0.0001** — this is the one finding in
+  this project that clears a real statistical significance bar.
+- Prompt specificity on mutant tasks: 39.3% (11/28) vs. 28.0% (7/25),
+  **p = 0.56** — not statistically significant at this sample size. The
+  apparent improvement from earlier in this README should be read as
+  suggestive rather than confirmed.
+
+**Charts** (`benchmark/charts/`):
+- `pass_rate_by_model_task.png` — grouped bar chart of pass rate by model
+  and task, visualizing the bugfix/feature split across both models at once.
+- `diff_size_vs_outcome.png` — box plot of lines changed (insertions +
+  deletions) for passed vs. failed runs, among runs that made a real code
+  change.
+
+**A small classifier** (`benchmark/classify.py`): trained a logistic
+regression to predict pass/fail from run-level features (tool call count,
+iteration count, diff size, duration, and whether the task was a
+feature-addition or a mutation-generated bug). It reached 85.7% test
+accuracy against a 50.8% majority-class baseline (n=250, 25% held-out test
+split). More interesting than the accuracy number: the two most negative
+learned coefficients were `is_mutant_task` and `is_feature_task` — the
+model independently rediscovered, purely from the numbers, the same two
+qualitative findings this benchmark spent the most effort establishing by
+hand. `diff_lines` carried a positive coefficient, consistent with the
+Tier 4 finding that appropriately-sized changes tend to succeed.
+
+**Reproducing this:**
+```bash
+uv run python benchmark/analyze.py    # stats + charts
+uv run python benchmark/classify.py   # classifier
+```
 
 ## Limitations
 
